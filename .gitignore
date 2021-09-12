@@ -1,0 +1,14 @@
+__pycache__
+.mypy_cache
+*.log
+*.bmp
+*.png
+*.jpeg
+*.jpg
+ReadMe
+link
+*.gitsave
+*.m
+*.mat
+*.pkl
+*.zip
