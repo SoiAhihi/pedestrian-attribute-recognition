@@ -251,7 +251,7 @@ class TrainingEngine():
 
             logger.info('best score: {best:.3f}'.format(best=self.__state.best_score))
 
-        return self.__state.best_core
+        return self.__state.best_score
 
     def train(self, data_loader, model, criterion, optimizer, epoch):
         model.train()
