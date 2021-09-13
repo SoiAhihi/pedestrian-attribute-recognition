@@ -354,7 +354,6 @@ class TrainingEngine():
 
             for it in range(self.__state.attr_num):
                 for jt in range(min(self.__state.batch_size, target.shape[0])):
-                    print(str(it)+" "+ str(jt))
                     if target[jt][it] == 1.:
                         pos_tol[it] += 1.
                         if output[jt][it] == 1.:
