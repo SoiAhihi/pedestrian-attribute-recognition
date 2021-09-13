@@ -139,10 +139,16 @@ class TrainingEngine():
 
         if self.__state.model_name == 'inception_iccv':
             loss_list = []
-            predict = self.__state.output[0]
-            for output in self.__state.output:
-                loss_list.append(criterion(torch.sigmoid(output), target_var))
-                predict = torch.max(predict, output)
+            # predict = self.__state.output[0]
+            # for output in self.__state.output:
+            #     loss_list.append(criterion(torch.sigmoid(output), target_var))
+            #     predict = torch.max(predict, output)
+
+            predict = self.__state.output
+            loss_list.append(criterion(torch.sigmoid(predict), target_var))
+            predict = torch.max(predict, predict)
+
+
             self.__state.loss = sum(loss_list)
             self.__state.predict = predict.cpu()
             self.__state.accuracy_batch = lib.BinaryAccuracy(predict, target_var)
@@ -348,6 +354,7 @@ class TrainingEngine():
 
             for it in range(self.__state.attr_num):
                 for jt in range(min(self.__state.batch_size, target.shape[0])):
+                    print(str(it)+" "+ str(jt))
                     if target[jt][it] == 1.:
                         pos_tol[it] += 1.
                         if output[jt][it] == 1.:
