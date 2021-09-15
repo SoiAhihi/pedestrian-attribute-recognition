@@ -139,14 +139,15 @@ class TrainingEngine():
 
         if self.__state.model_name == 'inception_iccv':
             loss_list = []
-            # predict = self.__state.output[0]
-            # for output in self.__state.output:
-            #     loss_list.append(criterion(torch.sigmoid(output), target_var))
-            #     predict = torch.max(predict, output)
+            predict = self.__state.output[0]
+            for output in self.__state.output:
+                loss_list.append(criterion(torch.sigmoid(output), target_var))
+                predict = torch.max(predict, output)
 
-            predict = self.__state.output
-            loss_list.append(criterion(torch.sigmoid(predict), target_var))
-            predict = torch.max(predict, predict)
+            # # global
+            # predict = self.__state.output
+            # loss_list.append(criterion(torch.sigmoid(predict), target_var))
+            # predict = torch.max(predict, predict)
 
 
             self.__state.loss = sum(loss_list)

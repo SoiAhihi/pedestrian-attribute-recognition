@@ -51,9 +51,9 @@ def main():
 
     # _model = model.inception_iccv(pretrained=True, num_classes=num_classes)
     # _model = model.PartBaseConvolution()
-    # _model = model.TopBDNet(num_classes=num_classes,
-    # neck=True, double_bottleneck=True, drop_bottleneck_features=True)
-    _model = model.TopBDNet(num_classes=num_classes)
+    _model = model.TopBDNet(num_classes=num_classes,
+    neck=True, double_bottleneck=True, drop_bottleneck_features=False)
+    # _model = model.TopBDNet(num_classes=num_classes)
 
     criterion = model.WeightedBinaryCrossEntropy(loss_weight)
 
@@ -76,7 +76,7 @@ def main():
     state.save_model_path = args.save_model_path
     state.use_gpu = use_gpu
     state.print_freq = args.print_freq
-    state.resume = args.resume
+    # state.resume = args.resume
     # Workaround
     state.attr_name = attr_name
     state.attr_num = num_classes
