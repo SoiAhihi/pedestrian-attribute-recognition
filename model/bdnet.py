@@ -93,13 +93,13 @@ class TopBDNet(nn.Module):
         x_prelogits = self.classifier_global(x_x)
 
         #db
-        drop_x = self.maxpool(drop_x).view(drop_x.size()[:2])
-        t_drop_x = self.reduction_db(drop_x)
-        if self.bottleneck_db:
-            x_drop_x = self.bottleneck_db(t_drop_x)
-        else:
-            x_drop_x = t_drop_x
-        x_drop_prelogits = self.classifier_db(x_drop_x)
+        # drop_x = self.maxpool(drop_x).view(drop_x.size()[:2])
+        # t_drop_x = self.reduction_db(drop_x)
+        # if self.bottleneck_db:
+        #     x_drop_x = self.bottleneck_db(t_drop_x)
+        # else:
+        #     x_drop_x = t_drop_x
+        # x_drop_prelogits = self.classifier_db(x_drop_x)
 
         # if not self.training:
         #     return x_prelogits, x_drop_prelogits
@@ -114,7 +114,9 @@ class TopBDNet(nn.Module):
             return base, x_prelogits
         # if return_featuremaps:
         #     return base, x_prelogits, x_drop_prelogits, x_drop_bottleneck_features
-        return x_prelogits, x_drop_prelogits
+        # return x_prelogits, x_drop_prelogits
+        return x_prelogits, x_drop_bottleneck_features
+
         # return x_prelogits
 
     def name(self) -> str:
