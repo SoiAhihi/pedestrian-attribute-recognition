@@ -51,9 +51,11 @@ def main():
 
     # _model = model.inception_iccv(pretrained=True, num_classes=num_classes)
     # _model = model.PartBaseConvolution()
-    _model = model.TopBDNet(num_classes=num_classes,
-    neck=True, double_bottleneck=True, drop_bottleneck_features=True)
+    # _model = model.TopBDNet(num_classes=num_classes,
+    # neck=True, double_bottleneck=True, drop_bottleneck_features=True)
     # _model = model.TopBDNet(num_classes=num_classes)
+
+    _model = model.TopBDNet(num_classes=num_classes)
 
     criterion = model.WeightedBinaryCrossEntropy(loss_weight)
 
