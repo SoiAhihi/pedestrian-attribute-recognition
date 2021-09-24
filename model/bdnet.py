@@ -267,7 +267,7 @@ class TopBDNet(nn.Module):
 
     def forward(self, x):
         base = self.base(x)
-        
+        print(base.shape)
 
         #global
         x = self.avgpool_global(base)
@@ -319,7 +319,7 @@ class Kmeans_4p(nn.Module):
         self.avgpool_kmeans1 = nn.AdaptiveAvgPool2d((1,1))
         self.norm_kmeans1 = nn.Sequential(
             nn.Conv2d(2048, 512, 1),
-            nn.BatchNorm2d(128),
+            nn.BatchNorm2d(512),
             nn.ReLU(),
             nn.Conv2d(512, 128, 1),
             nn.BatchNorm2d(128),
@@ -331,7 +331,7 @@ class Kmeans_4p(nn.Module):
         self.avgpool_kmeans2 = nn.AdaptiveAvgPool2d((1,1))
         self.norm_kmeans2 = nn.Sequential(
             nn.Conv2d(2048, 512, 1),
-            nn.BatchNorm2d(128),
+            nn.BatchNorm2d(512),
             nn.ReLU(),
             nn.Conv2d(512, 128, 1),
             nn.BatchNorm2d(128),
@@ -343,7 +343,7 @@ class Kmeans_4p(nn.Module):
         self.avgpool_kmeans3 = nn.AdaptiveAvgPool2d((1,1))
         self.norm_kmeans3 = nn.Sequential(
             nn.Conv2d(2048, 512, 1),
-            nn.BatchNorm2d(128),
+            nn.BatchNorm2d(512),
             nn.ReLU(),
             nn.Conv2d(512, 128, 1),
             nn.BatchNorm2d(128),
@@ -355,7 +355,7 @@ class Kmeans_4p(nn.Module):
         self.avgpool_kmeans4 = nn.AdaptiveAvgPool2d((1,1))
         self.norm_kmeans4 = nn.Sequential(
             nn.Conv2d(2048, 512, 1),
-            nn.BatchNorm2d(128),
+            nn.BatchNorm2d(512),
             nn.ReLU(),
             nn.Conv2d(512, 128, 1),
             nn.BatchNorm2d(128),
@@ -366,19 +366,23 @@ class Kmeans_4p(nn.Module):
 
     def __kmeans(self, x):
 
-        re1 = torch.zeros(x.size())
-        re2 = torch.zeros(x.size())
-        re3 = torch.zeros(x.size())
-        re4 = torch.zeros(x.size())
-
         if torch.cuda.is_available():
             device = torch.device('cuda:0')
         else:
             device = torch.device('cpu')
 
+
+        re1 = torch.zeros(x.size(), device=device)
+        re2 = torch.zeros(x.size(), device=device)
+        re3 = torch.zeros(x.size(), device=device)
+        re4 = torch.zeros(x.size(), device=device)
+
+        
+
         for i in range(x.size()[0]):
             x1 = x[i]
-            x1=x1.reshape((x1.shape[0],x1.shape[1]*x1.shape[2]))
+            a, b, c = x1.shape
+            x1=x1.reshape((a,b*c))
             if torch.cuda.is_available():
                 device = torch.device('cuda:0')
             else:
@@ -392,10 +396,10 @@ class Kmeans_4p(nn.Module):
             )
             re = []
             for k in range(4):
-                temp = torch.zeros(x1.size())
+                temp = torch.zeros(x1.size(), device=device)
                 temp [k==cluster_ids_y] = x1[k==cluster_ids_y]
-                temp = temp.reshape((x1.shape[0], x1.shape[1], x1.shape[2]))
-                re[k] = temp
+                temp = temp.reshape((a,b,c))
+                re += [temp]
 
             re1[i] = re[0]
             re2[i] = re[1]
@@ -405,34 +409,35 @@ class Kmeans_4p(nn.Module):
         return re1, re2, re3, re4
 
     def forward(self, x):
-        x1 ,x2, x3, x4 = __kmeans(x)
+        x1 ,x2, x3, x4 = self.__kmeans(x)
 
         x1 = self.avgpool_kmeans1(x1)
         x1 = self.norm_kmeans1(x1)
         x1 = x1.view(x1.size()[:2])
-        x1 = bottleneck_kmeans1(x1)
+        x1 = self.bottleneck_kmeans1(x1)
 
         x2 = self.avgpool_kmeans1(x2)
         x2 = self.norm_kmeans1(x2)
         x2 = x2.view(x2.size()[:2])
-        x2 = bottleneck_kmeans1(x2)
+        x2 = self.bottleneck_kmeans2(x2)
 
         x3 = self.avgpool_kmeans1(x3)
         x3 = self.norm_kmeans1(x3)
         x3 = x3.view(x3.size()[:2])
-        x3 = bottleneck_kmeans1(x3)
+        x3 = self.bottleneck_kmeans3(x3)
 
         x4 = self.avgpool_kmeans1(x4)
         x4 = self.norm_kmeans1(x4)
         x4 = x4.view(x4.size()[:2])
-        x4 = bottleneck_kmeans1(x4)
+        x4 = self.bottleneck_kmeans4(x4)
 
-        x = x1.shape[0]*4
-        y = x1.shape[1]
-        re = torch.zeros(x,y)
-        index = 0
-        for i in [x1,x2,x3,x4]:
-            for j in i:
-              re[index] = j
-              index +=1
+        a = x4.shape[0]
+        b = x4.shape[1]
+        re = torch.zeros(a,b*4)
+        for i in range(a):
+            index = 0
+            for j in [x1,x2,x3,x4]:
+                for _ in range(b):
+                    re[i][index] = j[i][_]
+                    index +=1
         return re
