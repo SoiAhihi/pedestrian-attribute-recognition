@@ -219,7 +219,7 @@ import random
 import copy
 import numpy as np
 from kmeans_pytorch import kmeans, kmeans_predict
-# from .resnet import resnet50_ls
+from .resnet import resnet50_ls
 
 
 class TopBDNet(nn.Module):
@@ -364,7 +364,7 @@ class Kmeans_4p(nn.Module):
         self.bottleneck_kmeans4 = nn.BatchNorm1d(128)
         self.bottleneck_kmeans4.bias.requires_grad_(False)
 
-    def kmeans(self, x):
+    def __kmeans(self, x):
 
         re1 = torch.zeros(x.size())
         re2 = torch.zeros(x.size())
@@ -405,7 +405,7 @@ class Kmeans_4p(nn.Module):
         return re1, re2, re3, re4
 
     def forward(self, x):
-        x1 ,x2, x3, x4 = kmeans(x)
+        x1 ,x2, x3, x4 = __kmeans(x)
 
         x1 = self.avgpool_kmeans1(x1)
         x1 = self.norm_kmeans1(x1)
