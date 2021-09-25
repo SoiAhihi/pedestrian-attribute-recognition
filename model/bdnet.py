@@ -241,7 +241,7 @@ class TopBDNet(nn.Module):
         self.classifier_global = nn.Linear(512, num_classes)
 
         #k-means
-        self.split = Kmeans_4p().cuda()
+        self.split = Kmeans_4p()
         self.classifier_kmeans = nn.Linear(512, num_classes)
 
         #base
@@ -366,21 +366,21 @@ class Kmeans_4p(nn.Module):
 
     def __kmeans(self, x):
 
-        # if torch.cuda.is_available():
-        #     device = torch.device('cuda:0')
-        # else:
-        #     device = torch.device('cpu')
+        if torch.cuda.is_available():
+            device = torch.device('cuda:0')
+        else:
+            device = torch.device('cpu')
 
 
-        # re1 = torch.zeros(x.size(), device=device)
-        # re2 = torch.zeros(x.size(), device=device)
-        # re3 = torch.zeros(x.size(), device=device)
-        # re4 = torch.zeros(x.size(), device=device)
+        re1 = torch.zeros(x.size(), device=device)
+        re2 = torch.zeros(x.size(), device=device)
+        re3 = torch.zeros(x.size(), device=device)
+        re4 = torch.zeros(x.size(), device=device)
 
-        re1 = torch.zeros(x.size())
-        re2 = torch.zeros(x.size())
-        re3 = torch.zeros(x.size())
-        re4 = torch.zeros(x.size())
+        # re1 = torch.zeros(x.size())
+        # re2 = torch.zeros(x.size())
+        # re3 = torch.zeros(x.size())
+        # re4 = torch.zeros(x.size())
 
         
 
@@ -391,16 +391,16 @@ class Kmeans_4p(nn.Module):
             # k means procedure
             cluster_ids_x, cluster_centers = kmeans(
                 X=x1, num_clusters=4, distance='euclidean', tqdm_flag =False
-                # , device=device
+                , device=device
             )
             cluster_ids_y = kmeans_predict(
                 x1, cluster_centers, 'euclidean', tqdm_flag = False
-                # , device=device
+                , device=device
             )
             re = []
             for k in range(4):
                 temp = torch.zeros(x1.size()
-                # , device=device
+                , device=device
                 )
                 temp [k==cluster_ids_y] = x1[k==cluster_ids_y]
                 temp = temp.reshape((a,b,c))
@@ -438,7 +438,7 @@ class Kmeans_4p(nn.Module):
 
         a = x4.shape[0]
         b = x4.shape[1]
-        re = torch.zeros(a,b*4)
+        re = torch.zeros(a,b*4, device='cuda')
         for i in range(a):
             index = 0
             for j in [x1,x2,x3,x4]:
