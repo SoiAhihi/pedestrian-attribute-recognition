@@ -267,7 +267,6 @@ class TopBDNet(nn.Module):
 
     def forward(self, x):
         base = self.base(x)
-        print(base.shape)
 
         #global
         x = self.avgpool_global(base)
