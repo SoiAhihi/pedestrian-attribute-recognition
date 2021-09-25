@@ -218,7 +218,7 @@ from torchvision.models.resnet import Bottleneck
 import random
 import copy
 import numpy as np
-import kmeans_pytorch 
+from kmeans_pytorch import kmeans, kmeans_predict
 from .resnet import resnet50_ls
 
 
