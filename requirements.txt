@@ -1,3 +1,2 @@
 loguru
 torchnet
-kmeans-pytorch
