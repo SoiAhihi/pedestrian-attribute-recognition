@@ -231,19 +231,21 @@ class TopBDNet(nn.Module):
         #global
         self.avgpool_global = nn.AdaptiveAvgPool2d((1,1))
 
-        self.norm = nn.Sequential(
+        self.reduce = nn.Sequential(
             nn.Conv2d(2048, 512, 1),
             nn.BatchNorm2d(512),
             nn.ReLU()
         )
 
-        self.bottleneck_global = nn.BatchNorm1d(512)
-        self.bottleneck_global.bias.requires_grad_(False)  # no shift
+        self.norm_global = nn.BatchNorm1d(512)
+        self.norm_global.bias.requires_grad_(False)  # no shift
 
         self.classifier_global = nn.Linear(512, num_classes)
 
         #k-means
         self.split = Kmeans_4p()
+        self.norm_kmeans = nn.BatchNorm1d(512)
+        self.norm_kmeans.bias.requires_grad_(False)
         self.classifier_kmeans = nn.Linear(512, num_classes)
 
         #base
@@ -272,13 +274,14 @@ class TopBDNet(nn.Module):
 
         #global
         x = self.avgpool_global(base)
-        x = self.norm(x)
+        x = self.reduce(x)
         x = x.view(x.size()[:2])
-        x = self.bottleneck_global(x)
+        x = self.norm_global(x)
         x_prelogits = self.classifier_global(x)
 
         #kmeans
         y = self.split(base)
+        y = self.norm_kmeans(y)
         y_prelogits = self.classifier_kmeans(y)
 
 
@@ -437,6 +440,11 @@ class Kmeans_4p(nn.Module):
         x4 = x4.view(x4.size()[:2])
         x4 = self.bottleneck_kmeans4(x4)
 
-        re = reduce(lambda x,y: np.append(x,y,axis=1),[x1.numpy(),x2.numpy(),x3.numpy(),x4.numpy()])
-        re = torch.tensor(re,device='cuda')
+        re = reduce(lambda x,y: np.append(x,y,axis=1),
+        [x1.to("cpu").detach().numpy(),
+        x2.to("cpu").detach().numpy(),
+        x3.to("cpu").detach().numpy(),
+        x4.to("cpu").detach().numpy()]
+        )
+        re = torch.from_numpy(re).to("cuda")
         return re
