@@ -322,10 +322,7 @@ class Kmeans_4p(nn.Module):
 
         self.avgpool_kmeans1 = nn.AdaptiveAvgPool2d((1,1))
         self.norm_kmeans1 = nn.Sequential(
-            nn.Conv2d(2048, 512, 1),
-            nn.BatchNorm2d(512),
-            nn.ReLU(),
-            nn.Conv2d(512, 128, 1),
+            nn.Conv2d(2048, 128, 1),
             nn.BatchNorm2d(128),
             nn.ReLU()
         )
@@ -334,10 +331,7 @@ class Kmeans_4p(nn.Module):
 
         self.avgpool_kmeans2 = nn.AdaptiveAvgPool2d((1,1))
         self.norm_kmeans2 = nn.Sequential(
-            nn.Conv2d(2048, 512, 1),
-            nn.BatchNorm2d(512),
-            nn.ReLU(),
-            nn.Conv2d(512, 128, 1),
+            nn.Conv2d(2048, 128, 1),
             nn.BatchNorm2d(128),
             nn.ReLU()
         )
@@ -346,10 +340,7 @@ class Kmeans_4p(nn.Module):
 
         self.avgpool_kmeans3 = nn.AdaptiveAvgPool2d((1,1))
         self.norm_kmeans3 = nn.Sequential(
-            nn.Conv2d(2048, 512, 1),
-            nn.BatchNorm2d(512),
-            nn.ReLU(),
-            nn.Conv2d(512, 128, 1),
+            nn.Conv2d(2048, 128, 1),
             nn.BatchNorm2d(128),
             nn.ReLU()
         )
@@ -358,10 +349,7 @@ class Kmeans_4p(nn.Module):
 
         self.avgpool_kmeans4 = nn.AdaptiveAvgPool2d((1,1))
         self.norm_kmeans4 = nn.Sequential(
-            nn.Conv2d(2048, 512, 1),
-            nn.BatchNorm2d(512),
-            nn.ReLU(),
-            nn.Conv2d(512, 128, 1),
+            nn.Conv2d(2048, 128, 1),
             nn.BatchNorm2d(128),
             nn.ReLU()
         )
