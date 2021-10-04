@@ -435,14 +435,6 @@ class Kmeans_4p(nn.Module):
         x4 = x4.view(x4.size()[:2])
         x4 = self.bottleneck_kmeans4(x4)
 
-        a = x4.shape[0]
-        b = x4.shape[1]
-        re = torch.zeros(a,b*4, device='cuda')
-        for i in range(a):
-            index = 0
-            for j in [x1,x2,x3,x4]:
-                for _ in range(b):
-                    re[i][index] = j[i][_]
-                    index +=1
-        re = re
+        re = functools.reduce(lambda x,y: np.append(x,y,axis=1),[x1.numpy(),x2.numpy(),x3.numpy(),x4.numpy()])
+        re = torch.tensor(re,device='cuda')
         return re
