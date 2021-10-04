@@ -78,7 +78,7 @@ def main():
     state.save_model_path = args.save_model_path
     state.use_gpu = use_gpu
     state.print_freq = args.print_freq
-    # state.resume = args.resume
+    state.resume = args.resume
     # Workaround
     state.attr_name = attr_name
     state.attr_num = num_classes
