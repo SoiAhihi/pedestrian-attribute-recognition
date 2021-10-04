@@ -220,6 +220,8 @@ import copy
 import numpy as np
 from kmeans_pytorch import kmeans, kmeans_predict
 from .resnet import resnet50_ls
+from functools import reduce
+
 
 
 class TopBDNet(nn.Module):
@@ -435,6 +437,6 @@ class Kmeans_4p(nn.Module):
         x4 = x4.view(x4.size()[:2])
         x4 = self.bottleneck_kmeans4(x4)
 
-        re = functools.reduce(lambda x,y: np.append(x,y,axis=1),[x1.numpy(),x2.numpy(),x3.numpy(),x4.numpy()])
+        re = reduce(lambda x,y: np.append(x,y,axis=1),[x1.numpy(),x2.numpy(),x3.numpy(),x4.numpy()])
         re = torch.tensor(re,device='cuda')
         return re
