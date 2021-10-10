@@ -364,10 +364,10 @@ class Kmeans_4p(nn.Module):
             device = torch.device('cpu')
 
 
-        re1 = torch.zeros(x.size(), device=device)
-        re2 = torch.zeros(x.size(), device=device)
-        re3 = torch.zeros(x.size(), device=device)
-        re4 = torch.zeros(x.size(), device=device)
+        re1 = torch.ones(x.size(), device=device)
+        re2 = torch.ones(x.size(), device=device)
+        re3 = torch.ones(x.size(), device=device)
+        re4 = torch.ones(x.size(), device=device)
 
         # re1 = torch.zeros(x.size())
         # re2 = torch.zeros(x.size())
@@ -391,7 +391,7 @@ class Kmeans_4p(nn.Module):
             )
             re = []
             for k in range(4):
-                temp = torch.zeros(x1.size()
+                temp = torch.ones(x1.size()
                 , device=device
                 )
                 temp [k==cluster_ids_y] = x1[k==cluster_ids_y]
