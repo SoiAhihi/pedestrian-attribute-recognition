@@ -428,11 +428,12 @@ class Kmeans_4p(nn.Module):
         x4 = x4.view(x4.size()[:2])
         x4 = self.bottleneck_kmeans4(x4)
 
-        re = reduce(lambda x,y: np.append(x,y,axis=1),
-        [x1.to("cpu").detach().numpy(),
-        x2.to("cpu").detach().numpy(),
-        x3.to("cpu").detach().numpy(),
-        x4.to("cpu").detach().numpy()]
-        )
-        re = torch.from_numpy(re).to("cuda")
+        # re = reduce(lambda x,y: np.append(x,y,axis=1),
+        # [x1.to("cpu").detach().numpy(),
+        # x2.to("cpu").detach().numpy(),
+        # x3.to("cpu").detach().numpy(),
+        # x4.to("cpu").detach().numpy()]
+        # )
+        # re = torch.from_numpy(re).to("cuda")
+        re = torch.cat([x1, x2, x3, x4], 1)
         return re
